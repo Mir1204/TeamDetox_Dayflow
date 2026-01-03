@@ -1,6 +1,6 @@
 // controllers/payroll.controller.js
 const payrollService = require('../services/payroll.service');
-const { successResponse } = require('../utils/responseHandler');
+const { successResponse, errorResponse } = require('../utils/responseHandler');
 const { HTTP_STATUS, SUCCESS_MESSAGES } = require('../utils/constants');
 const { asyncHandler } = require('../middlewares/error.middleware');
 
@@ -92,7 +92,39 @@ exports.getEmployeePayroll = asyncHandler(async (req, res) => {
 // @route   POST /api/payroll/create
 // @access  Private (HR, Admin)
 exports.createPayroll = asyncHandler(async (req, res) => {
+  console.log('🔍 CREATE PAYROLL - Controller Debug:');
+  console.log('─────────────────────────────────────────');
+  console.log('Request Body:', JSON.stringify(req.body, null, 2));
+  console.log('Employee ID from body:', req.body.employeeId);
+  console.log('Employee ID type:', typeof req.body.employeeId);
+  console.log('Employee ID length:', req.body.employeeId?.length);
+  console.log('User making request:', req.user.id);
+  console.log('─────────────────────────────────────────\n');
+
   const { employeeId, ...salaryData } = req.body;
+
+  // Additional validation
+  if (!employeeId) {
+    console.log('❌ No employeeId provided in request body');
+    return errorResponse(
+      res,
+      HTTP_STATUS.BAD_REQUEST,
+      'Employee ID is required'
+    );
+  }
+
+  // Check if it's a valid format (24 hex characters)
+  const objectIdRegex = /^[0-9a-fA-F]{24}$/;
+  if (!objectIdRegex.test(employeeId)) {
+    console.log('❌ Invalid ObjectId format:', employeeId);
+    return errorResponse(
+      res,
+      HTTP_STATUS.BAD_REQUEST,
+      `Invalid employee ID format. Expected 24 character hex string, got: "${employeeId}"`
+    );
+  }
+
+  console.log('✅ Employee ID format is valid, proceeding to service...\n');
 
   const payroll = await payrollService.createPayroll(
     employeeId,

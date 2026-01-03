@@ -1,6 +1,6 @@
 // controllers/leave.controller.js
 const leaveService = require('../services/leave.service');
-const { successResponse } = require('../utils/responseHandler');
+const { successResponse, errorResponse } = require('../utils/responseHandler');
 const { HTTP_STATUS, SUCCESS_MESSAGES } = require('../utils/constants');
 const { asyncHandler } = require('../middlewares/error.middleware');
 const { getFileUrl } = require('../config/multer');
@@ -180,8 +180,25 @@ exports.getEmployeeLeaves = asyncHandler(async (req, res) => {
 // @route   PUT /api/leave/:leaveId/approve
 // @access  Private (HR, Admin)
 exports.approveLeave = asyncHandler(async (req, res) => {
+  // IMPORTANT: Extract leaveId from params
   const { leaveId } = req.params;
   const { adminComments } = req.body;
+
+  // Debug logging (remove after fixing)
+  console.log('✅ Controller - approveLeave:');
+  console.log('  leaveId from params:', leaveId);
+  console.log('  req.params:', req.params);
+  console.log('  adminComments:', adminComments);
+  console.log('  user:', req.user);
+
+  // Validation: Check if leaveId exists
+  if (!leaveId) {
+    return errorResponse(
+      res,
+      HTTP_STATUS.BAD_REQUEST,
+      'Leave ID is required'
+    );
+  }
 
   const approvedLeave = await leaveService.approveLeave(
     leaveId,
@@ -201,8 +218,25 @@ exports.approveLeave = asyncHandler(async (req, res) => {
 // @route   PUT /api/leave/:leaveId/reject
 // @access  Private (HR, Admin)
 exports.rejectLeave = asyncHandler(async (req, res) => {
+  // IMPORTANT: Extract leaveId from params
   const { leaveId } = req.params;
   const { adminComments } = req.body;
+
+  // Debug logging (remove after fixing)
+  console.log('❌ Controller - rejectLeave:');
+  console.log('  leaveId from params:', leaveId);
+  console.log('  req.params:', req.params);
+  console.log('  adminComments:', adminComments);
+  console.log('  user:', req.user);
+
+  // Validation: Check if leaveId exists
+  if (!leaveId) {
+    return errorResponse(
+      res,
+      HTTP_STATUS.BAD_REQUEST,
+      'Leave ID is required'
+    );
+  }
 
   const rejectedLeave = await leaveService.rejectLeave(
     leaveId,

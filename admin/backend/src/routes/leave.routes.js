@@ -1,112 +1,140 @@
+// routes/leave.routes.js
 const express = require('express');
 const router = express.Router();
+
+// Controllers
 const leaveController = require('../controllers/leave.controller');
+
+// Middlewares
 const { authenticate } = require('../middlewares/auth.middleware');
-const { authorizeRoles } = require('../middlewares/role.middleware');
-const { validateLeaveRequest, validateLeaveAction } = require('../validators/leave.validator');
-const { validate } = require('../middlewares/validate.middleware');
-const { uploadAttachments } = require('../config/multer'); // FIXED: Import attachments upload
+const { isHROrAdmin, isEmployee } = require('../middlewares/role.middleware');
+const { validateBody, validateQuery, validateParams } = require('../middlewares/validate.middleware');
 
-// All routes require authentication
-router.use(authenticate);
+// Validators
+const {
+  validateLeaveRequest,
+  validateLeaveUpdate,
+  validateLeaveAction,
+  validateLeaveFilters,
+  validateLeaveBalance
+} = require('../validators/leave.validator');
 
-// Employee Routes
+// Multer for attachments
+const { uploadAttachments, handleMulterError } = require('../config/multer');
 
-// @route   POST /api/leave/apply
-// @desc    Apply for leave
-// @access  Private (Employee, HR, Admin)
+// ============================================
+// EMPLOYEE ROUTES
+// ============================================
+
+// Apply for leave
 router.post(
   '/apply',
-  uploadAttachments, // FIXED: Use the exported function
-  validate(validateLeaveRequest),
+  authenticate,
+  isEmployee,
+  uploadAttachments,
+  handleMulterError,
+  validateBody(validateLeaveRequest),
   leaveController.applyLeave
 );
 
-// @route   GET /api/leave/my-leaves
-// @desc    Get own leave requests
-// @access  Private (Employee, HR, Admin)
-router.get('/my-leaves', leaveController.getOwnLeaves);
+// Get own leave requests
+router.get(
+  '/my-leaves',
+  authenticate,
+  isEmployee,
+  validateQuery(validateLeaveFilters),
+  leaveController.getOwnLeaves
+);
 
-// @route   GET /api/leave/my-leaves/:leaveId
-// @desc    Get specific leave request details
-// @access  Private (Employee, HR, Admin)
-router.get('/my-leaves/:leaveId', leaveController.getOwnLeaveById);
+// Get specific own leave request
+router.get(
+  '/my-leaves/:leaveId',
+  authenticate,
+  isEmployee,
+  leaveController.getOwnLeaveById
+);
 
-// @route   PUT /api/leave/my-leaves/:leaveId
-// @desc    Update own leave request (only if pending)
-// @access  Private (Employee, HR, Admin)
+// Update own leave request (only pending)
 router.put(
   '/my-leaves/:leaveId',
-  validate(validateLeaveRequest),
+  authenticate,
+  isEmployee,
+  validateBody(validateLeaveUpdate),
   leaveController.updateOwnLeave
 );
 
-// @route   DELETE /api/leave/my-leaves/:leaveId
-// @desc    Cancel own leave request (only if pending)
-// @access  Private (Employee, HR, Admin)
-router.delete('/my-leaves/:leaveId', leaveController.cancelOwnLeave);
+// Cancel own leave request
+router.delete(
+  '/my-leaves/:leaveId',
+  authenticate,
+  isEmployee,
+  leaveController.cancelOwnLeave
+);
 
-// @route   GET /api/leave/balance
-// @desc    Get leave balance
-// @access  Private (Employee, HR, Admin)
-router.get('/balance', leaveController.getLeaveBalance);
+// Get leave balance
+router.get(
+  '/balance',
+  authenticate,
+  isEmployee,
+  validateQuery(validateLeaveBalance),
+  leaveController.getLeaveBalance
+);
 
-// Admin/HR Routes
+// ============================================
+// ADMIN/HR ROUTES
+// ============================================
 
-// @route   GET /api/leave/all
-// @desc    Get all leave requests
-// @access  Private (HR, Admin)
+// Get all leave requests
 router.get(
   '/all',
-  authorizeRoles('HR', 'Admin'),
+  authenticate,
+  isHROrAdmin,
+  validateQuery(validateLeaveFilters),
   leaveController.getAllLeaves
 );
 
-// @route   GET /api/leave/pending
-// @desc    Get all pending leave requests
-// @access  Private (HR, Admin)
+// Get pending leave requests
 router.get(
   '/pending',
-  authorizeRoles('HR', 'Admin'),
+  authenticate,
+  isHROrAdmin,
   leaveController.getPendingLeaves
 );
 
-// @route   GET /api/leave/employee/:employeeId
-// @desc    Get specific employee's leave requests
-// @access  Private (HR, Admin)
+// Get specific employee's leaves
 router.get(
   '/employee/:employeeId',
-  authorizeRoles('HR', 'Admin'),
+  authenticate,
+  isHROrAdmin,
+  validateQuery(validateLeaveFilters),
   leaveController.getEmployeeLeaves
 );
 
-// @route   PUT /api/leave/:leaveId/approve
-// @desc    Approve leave request
-// @access  Private (HR, Admin)
+// Get employee's leave balance
+router.get(
+  '/employee/:employeeId/balance',
+  authenticate,
+  isHROrAdmin,
+  validateQuery(validateLeaveBalance),
+  leaveController.getEmployeeLeaveBalance
+);
+
+// IMPORTANT: Approve leave - Fixed route
 router.put(
   '/:leaveId/approve',
-  authorizeRoles('HR', 'Admin'),
-  validate(validateLeaveAction),
+  authenticate,
+  isHROrAdmin,
+  validateBody(validateLeaveAction),
   leaveController.approveLeave
 );
 
-// @route   PUT /api/leave/:leaveId/reject
-// @desc    Reject leave request
-// @access  Private (HR, Admin)
+// IMPORTANT: Reject leave - Fixed route
 router.put(
   '/:leaveId/reject',
-  authorizeRoles('HR', 'Admin'),
-  validate(validateLeaveAction),
+  authenticate,
+  isHROrAdmin,
+  validateBody(validateLeaveAction),
   leaveController.rejectLeave
-);
-
-// @route   GET /api/leave/employee/:employeeId/balance
-// @desc    Get employee's leave balance
-// @access  Private (HR, Admin)
-router.get(
-  '/employee/:employeeId/balance',
-  authorizeRoles('HR', 'Admin'),
-  leaveController.getEmployeeLeaveBalance
 );
 
 module.exports = router;

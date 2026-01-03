@@ -91,7 +91,8 @@ leaveSchema.statics.getLeaveBalance = async function(employeeId, year) {
   return await this.aggregate([
     {
       $match: {
-        employeeId: mongoose.Types.ObjectId(employeeId),
+        employeeId: new mongoose.Types.ObjectId(employeeId),
+
         status: 'Approved',
         startDate: { $gte: startOfYear, $lte: endOfYear }
       }

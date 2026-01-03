@@ -5,51 +5,52 @@ const Attendance = require('../models/Attendance.model');
 class LeaveService {
   // Apply for leave
   async applyLeave(userId, leaveData, attachments = []) {
-    const { leaveType, startDate, endDate, reason } = leaveData;
+  const { leaveType, startDate, endDate, reason } = leaveData;
 
-    const employee = await Employee.findOne({ userId });
-
-    if (!employee) {
-      throw new Error('Employee profile not found');
-    }
-
-    // Validate dates
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    
-    if (end < start) {
-      throw new Error('End date cannot be before start date');
-    }
-
-    // Check for overlapping leave requests
-    const overlappingLeave = await Leave.findOne({
-      employeeId: employee._id,
-      status: { $in: ['Pending', 'Approved'] },
-      $or: [
-        {
-          startDate: { $lte: end },
-          endDate: { $gte: start }
-        }
-      ]
-    });
-
-    if (overlappingLeave) {
-      throw new Error('You have already applied for leave during this period');
-    }
-
-    // Create leave request
-    const leave = await Leave.create({
-      employeeId: employee._id,
-      userId: userId,
-      leaveType,
-      startDate: start,
-      endDate: end,
-      reason,
-      attachments
-    });
-
-    return leave;
+  const employee = await Employee.findOne({ userId });
+  if (!employee) {
+    throw new Error('Employee profile not found');
   }
+
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (end < start) {
+    throw new Error('End date cannot be before start date');
+  }
+
+  const diffTime = end.getTime() - start.getTime();
+  const totalDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+  const overlappingLeave = await Leave.findOne({
+    employeeId: employee._id,
+    status: { $in: ['Pending', 'Approved'] },
+    $or: [
+      {
+        startDate: { $lte: end },
+        endDate: { $gte: start }
+      }
+    ]
+  });
+
+  if (overlappingLeave) {
+    throw new Error('You have already applied for leave during this period');
+  }
+
+  const leave = await Leave.create({
+    employeeId: employee._id,
+    userId,
+    leaveType,
+    startDate: start,
+    endDate: end,
+    reason,
+    attachments,
+    totalDays
+  });
+
+  return leave;
+}
+
 
   // Get own leave requests
   async getOwnLeaves(userId, filters = {}) {
@@ -252,6 +253,7 @@ class LeaveService {
     const leave = await Leave.findById(leaveId);
 
     if (!leave) {
+        console.log('approveLeave leaveId:', leaveId);
       throw new Error('Leave request not found');
     }
 

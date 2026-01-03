@@ -60,6 +60,7 @@ const validateBody = (schema) => {
       return validationErrorResponse(res, errors);
     }
 
+    // IMPORTANT: Only replace body, DO NOT touch params
     req.body = value;
     next();
   };
@@ -83,6 +84,7 @@ const validateQuery = (schema) => {
       return validationErrorResponse(res, errors);
     }
 
+    // IMPORTANT: Only replace query, DO NOT touch params
     req.query = value;
     next();
   };

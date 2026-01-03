@@ -1,96 +1,114 @@
+// routes/payroll.routes.js
 const express = require('express');
 const router = express.Router();
+
+// Controllers
 const payrollController = require('../controllers/payroll.controller');
+
+// Middlewares
 const { authenticate } = require('../middlewares/auth.middleware');
-const { authorizeRoles } = require('../middlewares/role.middleware');
-const { validatePayrollUpdate } = require('../validators/payroll.validator');
-const { validate } = require('../middlewares/validate.middleware');
+const { isHROrAdmin, isAdmin, isEmployee } = require('../middlewares/role.middleware');
+const { validateBody, validateQuery } = require('../middlewares/validate.middleware');
 
-// All routes require authentication
-router.use(authenticate);
+// Validators
+const {
+  validatePayrollCreate,       // IMPORTANT: Use the correct validator
+  validatePayrollUpdate,
+  validatePayrollPartialUpdate,
+  validateSalarySlip,
+  validatePayrollFilters
+} = require('../validators/payroll.validator');
 
-// Employee Routes
+// ============================================
+// EMPLOYEE ROUTES
+// ============================================
 
-// @route   GET /api/payroll/my-salary
-// @desc    Get own salary details (read-only)
-// @access  Private (Employee, HR, Admin)
-router.get('/my-salary', payrollController.getOwnSalary);
+// Get own salary details
+router.get(
+  '/my-salary',
+  authenticate,
+  isEmployee,
+  payrollController.getOwnSalary
+);
 
-// @route   GET /api/payroll/my-salary/history
-// @desc    Get own salary history
-// @access  Private (Employee, HR, Admin)
-router.get('/my-salary/history', payrollController.getOwnSalaryHistory);
+// Get own salary history
+router.get(
+  '/my-salary/history',
+  authenticate,
+  isEmployee,
+  payrollController.getOwnSalaryHistory
+);
 
-// @route   GET /api/payroll/my-salary/slip
-// @desc    Generate salary slip
-// @access  Private (Employee, HR, Admin)
-router.get('/my-salary/slip', payrollController.generateOwnSalarySlip);
+// Generate own salary slip
+router.get(
+  '/my-salary/slip',
+  authenticate,
+  isEmployee,
+  validateQuery(validateSalarySlip),
+  payrollController.generateOwnSalarySlip
+);
 
-// Admin/HR Routes
+// ============================================
+// ADMIN/HR ROUTES
+// ============================================
 
-// @route   GET /api/payroll/all
-// @desc    Get all employees' payroll
-// @access  Private (HR, Admin)
+// Get all employees' payroll
 router.get(
   '/all',
-  authorizeRoles('HR', 'Admin'),
+  authenticate,
+  isHROrAdmin,
+  validateQuery(validatePayrollFilters),
   payrollController.getAllPayroll
 );
 
-// @route   GET /api/payroll/employee/:employeeId
-// @desc    Get specific employee's payroll
-// @access  Private (HR, Admin)
+// Get payroll summary/statistics
+router.get(
+  '/summary',
+  authenticate,
+  isHROrAdmin,
+  payrollController.getPayrollSummary
+);
+
+// Get specific employee's payroll
 router.get(
   '/employee/:employeeId',
-  authorizeRoles('HR', 'Admin'),
+  authenticate,
+  isHROrAdmin,
   payrollController.getEmployeePayroll
 );
 
-// @route   POST /api/payroll/create
-// @desc    Create payroll for new employee
-// @access  Private (HR, Admin)
-router.post(
-  '/create',
-  authorizeRoles('HR', 'Admin'),
-  validate(validatePayrollUpdate),
-  payrollController.createPayroll
-);
-
-// @route   PUT /api/payroll/employee/:employeeId
-// @desc    Update employee's salary structure
-// @access  Private (HR, Admin)
-router.put(
-  '/employee/:employeeId',
-  authorizeRoles('HR', 'Admin'),
-  validate(validatePayrollUpdate),
-  payrollController.updatePayroll
-);
-
-// @route   GET /api/payroll/employee/:employeeId/history
-// @desc    Get employee's salary history
-// @access  Private (HR, Admin)
+// Get employee's salary history
 router.get(
   '/employee/:employeeId/history',
-  authorizeRoles('HR', 'Admin'),
+  authenticate,
+  isHROrAdmin,
   payrollController.getEmployeeSalaryHistory
 );
 
-// @route   DELETE /api/payroll/employee/:employeeId
-// @desc    Delete employee's payroll (use with caution)
-// @access  Private (Admin only)
-router.delete(
-  '/employee/:employeeId',
-  authorizeRoles('Admin'),
-  payrollController.deletePayroll
+// IMPORTANT: Create payroll - Use validatePayrollCreate
+router.post(
+  '/create',
+  authenticate,
+  isHROrAdmin,
+  validateBody(validatePayrollCreate),  // ← FIXED: Use the right validator
+  payrollController.createPayroll
 );
 
-// @route   GET /api/payroll/summary
-// @desc    Get payroll summary/statistics
-// @access  Private (HR, Admin)
-router.get(
-  '/summary',
-  authorizeRoles('HR', 'Admin'),
-  payrollController.getPayrollSummary
+// Update employee's payroll
+router.put(
+  '/employee/:employeeId',
+  authenticate,
+  isHROrAdmin,
+  validateBody(validatePayrollUpdate),
+  payrollController.updatePayroll
+);
+
+// Delete employee's payroll (Admin only)
+router.delete(
+  '/employee/:employeeId',
+  authenticate,
+  isAdmin,
+  payrollController.deletePayroll
 );
 
 module.exports = router;

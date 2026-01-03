@@ -1,0 +1,613 @@
+{
+  "info": {
+    "name": "HRMS API",
+    "_postman_id": "hrms-api-collection",
+    "description": "Complete HRMS API Collection for Testing",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "employeeId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "leaveId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "1. Sign Up (Employee)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"EMP001\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Password@123\",\n  \"confirmPassword\": \"Password@123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"role\": \"Employee\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "signup"]
+            }
+          }
+        },
+        {
+          "name": "2. Sign Up (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"ADM001\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"Admin@123\",\n  \"confirmPassword\": \"Admin@123\",\n  \"firstName\": \"Admin\",\n  \"lastName\": \"User\",\n  \"role\": \"Admin\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/signup",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "signup"]
+            }
+          }
+        },
+        {
+          "name": "3. Sign In",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.data.token);",
+                  "    pm.collectionVariables.set('employeeId', jsonData.data.employee.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"Password@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/signin",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "signin"]
+            }
+          }
+        },
+        {
+          "name": "4. Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/forgot-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "forgot-password"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Employee",
+      "item": [
+        {
+          "name": "1. Get Own Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employee/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employee", "profile"]
+            }
+          }
+        },
+        {
+          "name": "2. Update Own Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"1234567890\",\n  \"address\": {\n    \"street\": \"123 Main St\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"country\": \"USA\",\n    \"zipCode\": \"10001\"\n  },\n  \"emergencyContact\": {\n    \"name\": \"Jane Doe\",\n    \"relationship\": \"Spouse\",\n    \"phone\": \"0987654321\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/employee/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employee", "profile"]
+            }
+          }
+        },
+        {
+          "name": "3. Get Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/employee/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employee", "dashboard"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Attendance",
+      "item": [
+        {
+          "name": "1. Check In",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/check-in",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "attendance", "check-in"]
+            }
+          }
+        },
+        {
+          "name": "2. Check Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/check-out",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "attendance", "check-out"]
+            }
+          }
+        },
+        {
+          "name": "3. Get Today's Attendance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/today",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "attendance", "today"]
+            }
+          }
+        },
+        {
+          "name": "4. Get Own Attendance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/my-attendance",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "attendance", "my-attendance"]
+            }
+          }
+        },
+        {
+          "name": "5. Get Attendance Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/attendance/my-attendance/summary?year=2025&month=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "attendance", "my-attendance", "summary"],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2025"
+                },
+                {
+                  "key": "month",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leave",
+      "item": [
+        {
+          "name": "1. Apply for Leave",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "    pm.collectionVariables.set('leaveId', jsonData.data._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"leaveType\": \"Paid\",\n  \"startDate\": \"2025-01-10\",\n  \"endDate\": \"2025-01-12\",\n  \"reason\": \"Family vacation planned for this period. Need to attend family function.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/leave/apply",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "leave", "apply"]
+            }
+          }
+        },
+        {
+          "name": "2. Get Own Leaves",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/leave/my-leaves",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "leave", "my-leaves"]
+            }
+          }
+        },
+        {
+          "name": "3. Get Leave Balance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/leave/balance?year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "leave", "balance"],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2025"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payroll",
+      "item": [
+        {
+          "name": "1. Get Own Salary",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/payroll/my-salary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payroll", "my-salary"]
+            }
+          }
+        },
+        {
+          "name": "2. Generate Salary Slip",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/payroll/my-salary/slip?month=1&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payroll", "my-salary", "slip"],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "1"
+                },
+                {
+                  "key": "year",
+                  "value": "2025"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "1. Get Admin Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "2. Get All Employees",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/employees",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "employees"]
+            }
+          }
+        },
+        {
+          "name": "3. Create Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"EMP002\",\n  \"email\": \"jane.smith@example.com\",\n  \"password\": \"TempPass@123\",\n  \"role\": \"Employee\",\n  \"personalDetails\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"dateOfBirth\": \"1995-05-15\",\n    \"gender\": \"Female\",\n    \"phone\": \"5555555555\"\n  },\n  \"jobDetails\": {\n    \"designation\": \"Software Engineer\",\n    \"department\": \"Engineering\",\n    \"dateOfJoining\": \"2025-01-01\",\n    \"employmentType\": \"Full-time\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/employees",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "employees"]
+            }
+          }
+        },
+        {
+          "name": "4. Approve Leave",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"adminComments\": \"Approved. Enjoy your vacation!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/leave/{{leaveId}}/approve",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "leave", "{{leaveId}}", "approve"]
+            }
+          }
+        },
+        {
+          "name": "5. Create Payroll",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"employeeId\": \"{{employeeId}}\",\n  \"salaryStructure\": {\n    \"basicSalary\": 50000,\n    \"allowances\": {\n      \"hra\": 15000,\n      \"da\": 5000,\n      \"ta\": 3000,\n      \"medical\": 2000,\n      \"other\": 1000\n    },\n    \"deductions\": {\n      \"pf\": 6000,\n      \"tax\": 8000,\n      \"insurance\": 1000,\n      \"other\": 500\n    }\n  },\n  \"bankDetails\": {\n    \"accountHolderName\": \"John Doe\",\n    \"accountNumber\": \"1234567890123456\",\n    \"bankName\": \"State Bank\",\n    \"ifscCode\": \"SBIN0001234\",\n    \"branch\": \"Main Branch\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payroll/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "payroll", "create"]
+            }
+          }
+        },
+        {
+          "name": "6. Get Reports - Attendance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/reports/attendance?startDate=2025-01-01&endDate=2025-01-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "reports", "attendance"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2025-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2025-01-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "7. Get Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/analytics?year=2025&month=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "admin", "analytics"],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2025"
+                },
+                {
+                  "key": "month",
+                  "value": "2025"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
