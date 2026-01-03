@@ -1,20 +1,51 @@
-/* Admin Profile Styles */
+/**
+ * Admin Profile Styles
+ * 
+ * Comprehensive styling for user profile management interface
+ * Features modern dark theme with advanced form controls
+ * 
+ * Sections:
+ * - Global Layout & Container
+ * - Header & Navigation Matching Dashboard
+ * - Profile Information Display
+ * - Form Controls & Input Fields
+ * - Validation States & Error Handling
+ * - Tabbed Interface
+ * - Interactive Elements & Animations
+ * - Responsive Design
+ * 
+ * @version 1.0.0
+ * @author TeamDetox
+ */
+
+/* ========== GLOBAL LAYOUT & CONTAINER ========== */
 
 .admin-profile-container {
   min-height: 100vh;
-  background: #1a1a1a;
-  color: #fff;
+  background: #1a1a1a; /* Primary dark background */
+  color: #fff; /* Primary text color */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* Smooth scrolling for better UX */
+  scroll-behavior: smooth;
 }
 
-/* Header Styles - Matching Dashboard */
+/* ========== HEADER STYLES - MATCHING DASHBOARD ========== */
+
+/**
+ * Profile header matching dashboard design
+ * Consistent branding and navigation experience
+ */
 .dashboard-header {
-  background: #2a2a2a;
+  background: #2a2a2a; /* Secondary background */
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #404040;
+  border-bottom: 1px solid #404040; /* Subtle separation */
+  /* Sticky positioning for better navigation */
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .header-left {

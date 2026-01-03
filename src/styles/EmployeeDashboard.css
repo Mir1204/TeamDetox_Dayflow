@@ -1,27 +1,65 @@
-/* Employee Dashboard Styles */
+/**
+ * Employee Dashboard Styles
+ * 
+ * Complete styling for the employee management dashboard
+ * Features modern dark theme with responsive design
+ * 
+ * Sections:
+ * - Global Layout & Typography
+ * - Header & Navigation
+ * - Employee Grid & Cards
+ * - Attendance Module
+ * - Time Off Module
+ * - Modal Components
+ * - Interactive Elements
+ * - Responsive Design
+ * 
+ * @version 1.0.0
+ * @author TeamDetox
+ */
+
+/* ========== GLOBAL LAYOUT & TYPOGRAPHY ========== */
 
 .dashboard-container {
   min-height: 100vh;
-  background: #1a1a1a;
+  background: #1a1a1a; /* Primary dark background */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #ffffff;
+  /* Smooth scrolling for better UX */
+  scroll-behavior: smooth;
 }
 
-/* Header */
+/* ========== HEADER & NAVIGATION STYLES ========== */
+
+/**
+ * Main dashboard header
+ * Contains logo, navigation, and user controls
+ */
 .dashboard-header {
-  background: #2a2a2a;
+  background: #2a2a2a; /* Secondary dark background */
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #404040;
+  border-bottom: 1px solid #404040; /* Subtle border */
+  /* Sticky header for better navigation */
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
+/**
+ * Left side of header - Logo and main navigation
+ */
 .header-left {
   display: flex;
   align-items: center;
   gap: 2rem;
 }
 
+/**
+ * Company logo container with background styling
+ */
 .company-logo {
   color: #fff;
   font-weight: 600;
@@ -29,19 +67,34 @@
   padding: 0.5rem 1rem;
   background: #404040;
   border-radius: 8px;
+  /* Smooth hover effect */
+  transition: background-color 0.3s ease;
 }
 
+/**
+ * Logo image optimization
+ */
 .logo-image {
   height: 40px;
   width: auto;
   object-fit: contain;
+  /* Smooth image loading */
+  image-rendering: -webkit-optimize-contrast;
 }
 
+/**
+ * Main navigation container
+ * Horizontal tab layout
+ */
 .main-navigation {
   display: flex;
   gap: 0.5rem;
 }
 
+/**
+ * Navigation tab buttons
+ * Interactive elements with hover states
+ */
 .nav-tab {
   background: transparent;
   border: 1px solid #555;

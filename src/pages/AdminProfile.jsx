@@ -1,27 +1,96 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * Admin Profile Component
+ * 
+ * Comprehensive user profile management system with multiple sections:
+ * 1. Basic Information - Core user details and contact info
+ * 2. Resume Information - Professional summary, experience, education
+ * 3. Private Information - Personal details and emergency contacts
+ * 4. Salary Information - Compensation and benefits data
+ * 5. Security - Password and security settings
+ * 
+ * Features:
+ * - Real-time field validation
+ * - Image upload with preview
+ * - Tabbed interface for organized data
+ * - Edit mode with save/cancel functionality
+ * - Direct navigation to dashboard modules
+ * - Responsive design with modern UI
+ * 
+ * @component
+ * @version 1.0.0
+ * @author TeamDetox
+ */
+
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import '../styles/AdminProfile.css';
 import companyLogo from '../assets/company-logo.jpeg';
 
+/**
+ * Admin Profile Component
+ * 
+ * @param {Object} props - Component props
+ * @param {Function} props.onBackToDashboard - Navigation handler to dashboard
+ * @param {string} props.apiBaseUrl - Base URL for API calls
+ * @param {Function} props.onLogout - Logout handler function
+ * @param {Function} props.onNavigateToModule - Module navigation handler
+ * @returns {JSX.Element} Admin profile component
+ */
 const AdminProfile = ({ onBackToDashboard, apiBaseUrl, onLogout, onNavigateToModule }) => {
+  // ========== STATE MANAGEMENT ==========
+  
+  /** Currently active profile section */
   const [activeSection, setActiveSection] = useState('resume');
+  
+  /** Profile image data (base64 or URL) */
   const [profileImage, setProfileImage] = useState(null);
+  
+  /** Edit mode states for different sections */
   const [isEditingBasicInfo, setIsEditingBasicInfo] = useState(false);
   const [isEditingResume, setIsEditingResume] = useState(false);
   const [isEditingPrivateInfo, setIsEditingPrivateInfo] = useState(false);
+  
+  /** Loading and error states */
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  /** UI state management */
   const [activeTab, setActiveTab] = useState('profile');
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  
+  /** Field validation errors */
   const [fieldErrors, setFieldErrors] = useState({});
   
-  // Get user from localStorage or use default
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+  // ========== USER DATA MANAGEMENT ==========
+  
+  /**
+   * Get and validate user data from localStorage
+   * 
+   * @returns {Object|null} User data object or null
+   */
+  const getUserFromStorage = useCallback(() => {
+    try {
+      const savedUser = localStorage.getItem('user');
+      if (savedUser) {
+        const userData = JSON.parse(savedUser);
+        // Validate essential fields
+        if (userData && userData.email) {
+          return userData;
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error('Error parsing user data from storage:', error);
+      return null;
+    }
+  }, []);
 
-  // Basic info state - will be loaded from user data or API
+  /** Current user data */
+  const [user, setUser] = useState(getUserFromStorage);
+
+  // ========== FORM DATA STATES ==========
+  
+  /** Basic information form data */
   const [basicInfo, setBasicInfo] = useState({
     name: '',
     jobPosition: '',
@@ -33,7 +102,7 @@ const AdminProfile = ({ onBackToDashboard, apiBaseUrl, onLogout, onNavigateToMod
     location: ''
   });
 
-  // Resume data - will be loaded from API
+  /** Resume information form data */
   const [resumeData, setResumeData] = useState({
     summary: '',
     experience: '',
@@ -41,7 +110,7 @@ const AdminProfile = ({ onBackToDashboard, apiBaseUrl, onLogout, onNavigateToMod
     skills: ''
   });
 
-  // Private info data - will be loaded from API
+  /** Private information form data */
   const [privateInfo, setPrivateInfo] = useState({
     dateOfBirth: '',
     nationality: '',
