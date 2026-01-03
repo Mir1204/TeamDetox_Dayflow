@@ -1,0 +1,1508 @@
+/**
+ * Employee Dashboard Styles
+ * 
+ * Complete styling for the employee management dashboard
+ * Features modern dark theme with responsive design
+ * 
+ * Sections:
+ * - Global Layout & Typography
+ * - Header & Navigation
+ * - Employee Grid & Cards
+ * - Attendance Module
+ * - Time Off Module
+ * - Modal Components
+ * - Interactive Elements
+ * - Responsive Design
+ * 
+ * @version 1.0.0
+ * @author TeamDetox
+ */
+
+/* ========== GLOBAL LAYOUT & TYPOGRAPHY ========== */
+
+.dashboard-container {
+  min-height: 100vh;
+  background: #1a1a1a; /* Primary dark background */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #ffffff;
+  /* Smooth scrolling for better UX */
+  scroll-behavior: smooth;
+}
+
+/* ========== HEADER & NAVIGATION STYLES ========== */
+
+/**
+ * Main dashboard header
+ * Contains logo, navigation, and user controls
+ */
+.dashboard-header {
+  background: #2a2a2a; /* Secondary dark background */
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #404040; /* Subtle border */
+  /* Sticky header for better navigation */
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/**
+ * Left side of header - Logo and main navigation
+ */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/**
+ * Company logo container with background styling
+ */
+.company-logo {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  background: #404040;
+  border-radius: 8px;
+  /* Smooth hover effect */
+  transition: background-color 0.3s ease;
+}
+
+/**
+ * Logo image optimization
+ */
+.logo-image {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  /* Smooth image loading */
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/**
+ * Main navigation container
+ * Horizontal tab layout
+ */
+.main-navigation {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/**
+ * Navigation tab buttons
+ * Interactive elements with hover states
+ */
+.nav-tab {
+  background: transparent;
+  border: 1px solid #555;
+  color: #ccc;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.nav-tab:hover {
+  background: #404040;
+  color: #fff;
+}
+
+.nav-tab.active {
+  background: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Check In/Out Circular Button */
+.check-in-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.check-in-circle.checked-out {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.check-in-circle.checked-in {
+  background: linear-gradient(135deg, #dc3545, #e74c3c);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.check-in-circle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.check-in-circle:active {
+  transform: scale(0.95);
+}
+
+.user-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-indicator.online {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #28a745;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #404040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.profile-btn {
+  background: transparent;
+  border: 1px solid #555;
+  color: #ccc;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-btn:hover {
+  background: #404040;
+  color: #fff;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  min-width: 120px;
+  z-index: 1000;
+}
+
+.profile-dropdown button {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  text-align: left;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.profile-dropdown button:hover {
+  background: #404040;
+  color: #fff;
+}
+
+/* Main Content */
+.dashboard-content {
+  padding: 2rem;
+}
+
+.employees-section {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  margin-bottom: 2rem;
+}
+
+.info-text {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.main-title {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.controls-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.new-btn {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.new-btn:hover {
+  background: #0056b3;
+}
+
+.search-input {
+  background: #2a2a2a;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  width: 300px;
+  font-size: 1rem;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+/* Employee Grid */
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.employee-card {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.employee-card:hover {
+  background: #333;
+  border-color: #007bff;
+  transform: translateY(-2px);
+}
+
+.employee-card .status-indicator {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.employee-card .status-indicator.green {
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+}
+
+.employee-card .status-indicator.red {
+  background: #dc3545;
+}
+
+.employee-card .status-indicator.yellow {
+  background: #fbbf24;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+}
+
+.employee-card .status-indicator.airplane {
+  background: transparent;
+  width: auto;
+  height: auto;
+  font-size: 14px;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
+}
+
+.employee-avatar {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.employee-name {
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Bottom Section */
+.bottom-section {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3rem;
+  margin-bottom: 2rem;
+}
+
+.left-info {
+  color: #ccc;
+}
+
+.settings-btn {
+  background: #404040;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+  transition: background 0.3s ease;
+}
+
+.settings-btn:hover {
+  background: #555;
+}
+
+.status-legend p {
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.status-legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.status-legend li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+  display: inline-block;
+}
+
+.legend-dot.green {
+  background: #4ade80;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+}
+
+.legend-dot.red {
+  background: #dc3545;
+}
+
+.legend-dot.yellow {
+  background: #fbbf24;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+}
+
+.legend-airplane {
+  font-size: 14px;
+  margin-right: 0.75rem;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
+}
+
+.right-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.check-section {
+  text-align: center;
+}
+
+.check-btn {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-width: 150px;
+}
+
+.check-btn:hover {
+  background: linear-gradient(135deg, #0056b3, #003d82);
+  transform: translateY(-2px);
+}
+
+.check-btn.checked-in {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+}
+
+.check-note {
+  color: #28a745;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.footer-info {
+  color: #999;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  border-top: 1px solid #404040;
+  padding-top: 1.5rem;
+}
+
+/* Employee Profile Modal Styles */
+.employee-profile-modal {
+  background: #1a1a1a;
+  border: 1px solid #404040;
+  border-radius: 12px;
+  padding: 2rem;
+  min-width: 90vw;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  color: #fff;
+}
+
+.profile-modal-content .profile-info-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  margin-bottom: 30px;
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.profile-modal-content .profile-avatar-container {
+  flex-shrink: 0;
+}
+
+.profile-modal-content .profile-avatar-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.profile-modal-content .avatar-circle {
+  width: 120px;
+  height: 120px;
+  background-color: #404040;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+}
+
+.profile-modal-content .avatar-icon {
+  color: white;
+}
+
+.profile-modal-content .basic-info-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.profile-modal-content .info-field {
+  margin-bottom: 20px;
+}
+
+.profile-modal-content .info-field label {
+  display: block;
+  color: #ccc;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.profile-modal-content .info-input {
+  width: 100%;
+  background: #404040;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.profile-modal-content .info-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #404040;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.tab-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tab-btn.active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+  background: rgba(0, 123, 255, 0.1);
+}
+
+/* Tab Content */
+.tab-content {
+  min-height: 300px;
+}
+
+.resume-section,
+.private-info-section {
+  padding: 2rem;
+  background: #2a2a2a;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.salary-info-section {
+  padding: 2rem;
+  background: #2a2a2a;
+  border-radius: 8px;
+}
+
+.salary-header {
+  margin-bottom: 2rem;
+}
+
+.salary-header h4 {
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.admin-note {
+  color: #007bff;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.salary-overview {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #1a1a1a;
+  border-radius: 8px;
+}
+
+.salary-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.salary-label {
+  color: #ccc;
+  font-weight: 500;
+}
+
+.salary-value {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.salary-period {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.salary-details {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.salary-components h5 {
+  color: #fff;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.component-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #404040;
+}
+
+.component-row span:first-child {
+  color: #fff;
+  font-weight: 500;
+}
+
+.component-row span:nth-child(2) {
+  color: #fff;
+  text-align: right;
+}
+
+.component-row span:nth-child(3) {
+  color: #ccc;
+  text-align: center;
+}
+
+.component-row span:nth-child(4) {
+  color: #007bff;
+  text-align: right;
+  font-weight: 500;
+}
+
+.component-note {
+  color: #999;
+  font-size: 0.8rem;
+  margin: 0.5rem 0 1rem 0;
+  line-height: 1.3;
+}
+
+.working-info {
+  background: #1a1a1a;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.working-days {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #404040;
+}
+
+.working-days span:first-child {
+  color: #ccc;
+  flex: 1;
+}
+
+.working-days span:nth-child(2) {
+  color: #fff;
+  font-weight: 600;
+}
+
+.working-days span:nth-child(3) {
+  color: #999;
+}
+
+.break-time {
+  width: 100px;
+  height: 20px;
+  background: #404040;
+  border-radius: 4px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-item span:first-child {
+  color: #ccc;
+  flex: 1;
+}
+
+.pf-info,
+.tax-info {
+  margin-bottom: 1.5rem;
+}
+
+.pf-info h6,
+.tax-info h6 {
+  color: #fff;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.pf-row,
+.tax-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #404040;
+}
+
+.pf-row span,
+.tax-row span {
+  color: #fff;
+}
+
+.pf-row span:first-child,
+.tax-row span:first-child {
+  color: #ccc;
+}
+
+.pf-row span:nth-child(4),
+.tax-row span:nth-child(4) {
+  color: #007bff;
+  text-align: right;
+}
+
+.pf-info p,
+.tax-info p {
+  color: #999;
+  font-size: 0.8rem;
+  margin: 0.5rem 0 1rem 0;
+}
+
+@media (max-width: 768px) {
+  .employee-profile-modal {
+    min-width: 95vw;
+    padding: 1rem;
+  }
+  
+  .profile-modal-content .basic-info-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .salary-details {
+    grid-template-columns: 1fr;
+  }
+  
+  .component-row,
+  .pf-row,
+  .tax-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .salary-overview {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.employee-modal {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 12px;
+  padding: 2rem;
+  min-width: 400px;
+  max-width: 500px;
+  text-align: center;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+  color: #fff;
+  margin: 0;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #999;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #fff;
+}
+
+.modal-content {
+  color: #ccc;
+}
+
+.employee-avatar-large {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.modal-content h4 {
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.status-text {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-text.present {
+  color: #28a745;
+}
+
+.status-text.absent {
+  color: #dc3545;
+}
+
+.status-text.leave {
+  color: #ffc107;
+}
+
+/* Tab Content Placeholders */
+.attendance-section {
+  padding: 2rem;
+  color: #fff;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.attendance-header {
+  margin-bottom: 2rem;
+}
+
+.attendance-title h2 {
+  color: #fff;
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.attendance-subtitle {
+  color: #ccc;
+  margin: 0.5rem 0 0 0;
+  font-size: 1rem;
+}
+
+.attendance-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.attendance-label {
+  color: #fff;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.attendance-search {
+  background: #2a2a2a;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  width: 300px;
+  font-size: 1rem;
+}
+
+.attendance-search::placeholder {
+  color: #999;
+}
+
+.date-navigation {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.nav-arrow {
+  background: #404040;
+  border: 1px solid #555;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: background 0.3s ease;
+}
+
+.nav-arrow:hover {
+  background: #555;
+}
+
+.date-btn,
+.day-btn {
+  background: #404040;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.date-btn:hover,
+.day-btn:hover {
+  background: #555;
+}
+
+.attendance-date {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  padding: 1rem;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.attendance-table-container {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.attendance-table th {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid #404040;
+}
+
+.attendance-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #404040;
+  color: #fff;
+}
+
+.attendance-row.on-leave td {
+  color: #999;
+  font-style: italic;
+}
+
+.employee-cell {
+  display: flex;
+  align-items: center;
+}
+
+.employee-bracket {
+  color: #ccc;
+  margin: 0 0.2rem;
+}
+
+.employee-name {
+  color: #fff;
+}
+
+.time-cell {
+  font-family: 'Courier New', monospace;
+  text-align: center;
+}
+
+.attendance-notes {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.note-section h3 {
+  color: #fff;
+  margin: 0 0 1.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.note-content p {
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.note-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Time Off Section */
+.timeoff-section {
+  padding: 2rem;
+  color: #fff;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.timeoff-header {
+  margin-bottom: 2rem;
+}
+
+.timeoff-title h2 {
+  color: #fff;
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.timeoff-subtitle {
+  color: #ccc;
+  margin: 0.5rem 0 0 0;
+  font-size: 1rem;
+}
+
+.timeoff-note {
+  color: #007bff;
+  margin: 0.5rem 0 0 0;
+  font-size: 0.9rem;
+}
+
+.timeoff-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.timeoff-label {
+  color: #fff;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.new-timeoff-btn {
+  background: linear-gradient(135deg, #8e44ad, #9b59b6);
+  border: none;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.new-timeoff-btn:hover {
+  background: linear-gradient(135deg, #7d3c98, #8e44ad);
+  transform: translateY(-2px);
+}
+
+.timeoff-search {
+  background: #2a2a2a;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  width: 300px;
+  font-size: 1rem;
+}
+
+.timeoff-search::placeholder {
+  color: #999;
+}
+
+/* Allocation Cards */
+.allocation-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.allocation-card {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.allocation-card:hover {
+  transform: translateY(-2px);
+}
+
+.allocation-card.paid {
+  border-left: 4px solid #007bff;
+}
+
+.allocation-card.sick {
+  border-left: 4px solid #ffc107;
+}
+
+.allocation-card.unpaid {
+  border-left: 4px solid #6c757d;
+}
+
+.allocation-card h3 {
+  color: #fff;
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+}
+
+.days-available {
+  color: #ccc;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Time Off Table */
+.timeoff-table-container {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.timeoff-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.timeoff-table th {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid #404040;
+}
+
+.timeoff-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #404040;
+  color: #fff;
+}
+
+.timeoff-row.approved td {
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.timeoff-row.rejected td {
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.timeoff-row.pending td {
+  background: rgba(255, 193, 7, 0.1);
+}
+
+.employee-cell {
+  display: flex;
+  align-items: center;
+}
+
+.employee-bracket {
+  color: #ccc;
+  margin: 0 0.2rem;
+}
+
+.employee-name {
+  color: #fff;
+}
+
+.date-cell {
+  font-family: 'Courier New', monospace;
+  text-align: center;
+}
+
+.type-cell {
+  text-align: center;
+}
+
+.timeoff-type {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.timeoff-type.paid-time-off {
+  background: rgba(0, 123, 255, 0.2);
+  color: #007bff;
+}
+
+.timeoff-type.sick-leave {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.timeoff-type.unpaid-leave {
+  background: rgba(108, 117, 125, 0.2);
+  color: #6c757d;
+}
+
+.status-cell {
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.reject-btn,
+.approve-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reject-btn {
+  background: #dc3545;
+}
+
+.reject-btn:hover {
+  background: #c82333;
+  transform: scale(1.1);
+}
+
+.approve-btn {
+  background: #28a745;
+}
+
+.approve-btn:hover {
+  background: #218838;
+  transform: scale(1.1);
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-badge.approved {
+  background: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+}
+
+.status-badge.rejected {
+  background: rgba(220, 53, 69, 0.2);
+  color: #dc3545;
+}
+
+.status-badge.pending {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+/* Responsive Design for Time Off */
+@media (max-width: 768px) {
+  .timeoff-section {
+    padding: 1rem;
+  }
+  
+  .timeoff-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .timeoff-search {
+    width: 100%;
+  }
+  
+  .allocation-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .timeoff-table-container {
+    overflow-x: auto;
+  }
+  
+  .timeoff-table {
+    min-width: 700px;
+  }
+  
+  .timeoff-table th,
+  .timeoff-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+
+/* Responsive Design for Attendance */
+@media (max-width: 768px) {
+  .attendance-section {
+    padding: 1rem;
+  }
+  
+  .attendance-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .attendance-search {
+    width: 100%;
+  }
+  
+  .date-navigation {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .attendance-table-container {
+    overflow-x: auto;
+  }
+  
+  .attendance-table {
+    min-width: 600px;
+  }
+  
+  .attendance-table th,
+  .attendance-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .employee-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .bottom-section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .right-actions {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .header-left {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .main-navigation {
+    flex-wrap: wrap;
+  }
+  
+  .dashboard-content {
+    padding: 1rem;
+  }
+  
+  .employee-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .controls-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+  
+  .employee-modal {
+    margin: 1rem;
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .employee-card {
+    min-height: 100px;
+    padding: 1rem;
+  }
+  
+  .employee-avatar {
+    font-size: 2.5rem;
+  }
+}
