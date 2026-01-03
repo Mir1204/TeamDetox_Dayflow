@@ -385,6 +385,70 @@
   box-shadow: 0 2px 0 rgba(46, 204, 113, 0.3);
 }
 
+/* Input wrapper for validation feedback */
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.info-input.error {
+  border-bottom-color: #e74c3c !important;
+  box-shadow: 0 2px 0 rgba(231, 76, 60, 0.3) !important;
+}
+
+.error-message {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  font-size: 12px;
+  color: #e74c3c;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Enhanced input styles */
+.info-input {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: #2c3e50;
+  border: none;
+  border-bottom: 2px solid #4a5f7a;
+  color: #ecf0f1;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  border-radius: 4px 4px 0 0;
+}
+
+.info-input:focus {
+  outline: none;
+  border-bottom-color: #3498db;
+  background-color: #34495e;
+  transform: translateY(-1px);
+}
+
+.info-input:read-only {
+  cursor: default;
+  background-color: #34495e;
+  opacity: 0.8;
+}
+
+.info-input.editable {
+  background-color: #2c3e50;
+  border-bottom-color: #3498db;
+  cursor: text;
+}
+
+.info-input.editable:hover {
+  background-color: #34495e;
+  border-bottom-color: #5dade2;
+}
+
+/* Placeholder styling */
+.info-input::placeholder {
+  color: #7f8c8d;
+  font-style: italic;
+}
+
 .tab-navigation {
   display: flex;
   border-bottom: 2px solid #4a5f7a;
@@ -537,28 +601,45 @@ select.form-input.editable option {
   font-size: 14px;
   font-family: inherit;
   resize: vertical;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+  border-radius: 4px 4px 0 0;
+  min-height: 60px;
 }
 
 .form-textarea:focus {
   outline: none;
   border-bottom-color: #3498db;
+  background-color: #34495e;
+  transform: translateY(-1px);
 }
 
 .form-textarea:read-only {
   cursor: default;
   background-color: #34495e;
   resize: none;
+  opacity: 0.8;
 }
 
 .form-textarea.editable {
   background-color: #2c3e50;
   border-bottom-color: #3498db;
+  cursor: text;
+}
+
+.form-textarea.editable:hover {
+  background-color: #34495e;
+  border-bottom-color: #5dade2;
 }
 
 .form-textarea.editable:focus {
   border-bottom-color: #2ecc71;
   box-shadow: 0 2px 0 rgba(46, 204, 113, 0.3);
+}
+
+/* Placeholder styling for textareas */
+.form-textarea::placeholder {
+  color: #7f8c8d;
+  font-style: italic;
 }
 
 /* Security Section */

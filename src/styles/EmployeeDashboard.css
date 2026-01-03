@@ -1042,15 +1042,309 @@
   margin-bottom: 0;
 }
 
+/* Time Off Section */
 .timeoff-section {
-  text-align: center;
-  padding: 3rem;
-  color: #ccc;
+  padding: 2rem;
+  color: #fff;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.timeoff-section h2 {
+.timeoff-header {
+  margin-bottom: 2rem;
+}
+
+.timeoff-title h2 {
   color: #fff;
-  margin-bottom: 1rem;
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.timeoff-subtitle {
+  color: #ccc;
+  margin: 0.5rem 0 0 0;
+  font-size: 1rem;
+}
+
+.timeoff-note {
+  color: #007bff;
+  margin: 0.5rem 0 0 0;
+  font-size: 0.9rem;
+}
+
+.timeoff-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.timeoff-label {
+  color: #fff;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+
+.new-timeoff-btn {
+  background: linear-gradient(135deg, #8e44ad, #9b59b6);
+  border: none;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.new-timeoff-btn:hover {
+  background: linear-gradient(135deg, #7d3c98, #8e44ad);
+  transform: translateY(-2px);
+}
+
+.timeoff-search {
+  background: #2a2a2a;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  width: 300px;
+  font-size: 1rem;
+}
+
+.timeoff-search::placeholder {
+  color: #999;
+}
+
+/* Allocation Cards */
+.allocation-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.allocation-card {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.allocation-card:hover {
+  transform: translateY(-2px);
+}
+
+.allocation-card.paid {
+  border-left: 4px solid #007bff;
+}
+
+.allocation-card.sick {
+  border-left: 4px solid #ffc107;
+}
+
+.allocation-card.unpaid {
+  border-left: 4px solid #6c757d;
+}
+
+.allocation-card h3 {
+  color: #fff;
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+}
+
+.days-available {
+  color: #ccc;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Time Off Table */
+.timeoff-table-container {
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.timeoff-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.timeoff-table th {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid #404040;
+}
+
+.timeoff-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #404040;
+  color: #fff;
+}
+
+.timeoff-row.approved td {
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.timeoff-row.rejected td {
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.timeoff-row.pending td {
+  background: rgba(255, 193, 7, 0.1);
+}
+
+.employee-cell {
+  display: flex;
+  align-items: center;
+}
+
+.employee-bracket {
+  color: #ccc;
+  margin: 0 0.2rem;
+}
+
+.employee-name {
+  color: #fff;
+}
+
+.date-cell {
+  font-family: 'Courier New', monospace;
+  text-align: center;
+}
+
+.type-cell {
+  text-align: center;
+}
+
+.timeoff-type {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.timeoff-type.paid-time-off {
+  background: rgba(0, 123, 255, 0.2);
+  color: #007bff;
+}
+
+.timeoff-type.sick-leave {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.timeoff-type.unpaid-leave {
+  background: rgba(108, 117, 125, 0.2);
+  color: #6c757d;
+}
+
+.status-cell {
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.reject-btn,
+.approve-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reject-btn {
+  background: #dc3545;
+}
+
+.reject-btn:hover {
+  background: #c82333;
+  transform: scale(1.1);
+}
+
+.approve-btn {
+  background: #28a745;
+}
+
+.approve-btn:hover {
+  background: #218838;
+  transform: scale(1.1);
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-badge.approved {
+  background: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+}
+
+.status-badge.rejected {
+  background: rgba(220, 53, 69, 0.2);
+  color: #dc3545;
+}
+
+.status-badge.pending {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+/* Responsive Design for Time Off */
+@media (max-width: 768px) {
+  .timeoff-section {
+    padding: 1rem;
+  }
+  
+  .timeoff-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .timeoff-search {
+    width: 100%;
+  }
+  
+  .allocation-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .timeoff-table-container {
+    overflow-x: auto;
+  }
+  
+  .timeoff-table {
+    min-width: 700px;
+  }
+  
+  .timeoff-table th,
+  .timeoff-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
 }
 
 /* Responsive Design for Attendance */

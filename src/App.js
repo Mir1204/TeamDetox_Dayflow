@@ -7,6 +7,7 @@ import EmployeeDashboard from './pages/EmployeeDashboard';
 function App() {
   const [currentPage, setCurrentPage] = useState('signin');
   const [user, setUser] = useState(null);
+  const [activeModule, setActiveModule] = useState('employees');
 
   useEffect(() => {
     // Check if user is already logged in
@@ -61,6 +62,7 @@ function App() {
           <EmployeeDashboard 
             onLogout={handleLogout}
             onNavigateToProfile={() => setCurrentPage('profile')}
+            initialModule={activeModule}
             user={user}
           />
         );
@@ -69,6 +71,10 @@ function App() {
           <AdminProfile 
             onBackToDashboard={() => setCurrentPage('dashboard')}
             onLogout={handleLogout}
+            onNavigateToModule={(module) => {
+              setActiveModule(module);
+              setCurrentPage('dashboard');
+            }}
             user={user}
           />
         );

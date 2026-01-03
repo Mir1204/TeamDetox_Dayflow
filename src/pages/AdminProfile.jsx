@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../styles/AdminProfile.css';
 import companyLogo from '../assets/company-logo.jpeg';
 
-const AdminProfile = ({ onBackToDashboard, apiBaseUrl, onLogout }) => {
+const AdminProfile = ({ onBackToDashboard, apiBaseUrl, onLogout, onNavigateToModule }) => {
   const [activeSection, setActiveSection] = useState('resume');
   const [profileImage, setProfileImage] = useState(null);
   const [isEditingBasicInfo, setIsEditingBasicInfo] = useState(false);
@@ -13,6 +13,7 @@ const AdminProfile = ({ onBackToDashboard, apiBaseUrl, onLogout }) => {
   const [activeTab, setActiveTab] = useState('profile');
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
   
   // Get user from localStorage or use default
   const [user, setUser] = useState(() => {
@@ -159,11 +160,54 @@ const AdminProfile = ({ onBackToDashboard, apiBaseUrl, onLogout }) => {
     }
   };
 
+  // Field validation function
+  const validateField = (field, value) => {
+    let error = '';
+    
+    switch(field) {
+      case 'email':
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          error = 'Please enter a valid email address';
+        }
+        break;
+      case 'mobile':
+        if (value && !/^[\+]?[(]?[\d\s\-\)]{10,}$/.test(value)) {
+          error = 'Please enter a valid phone number';
+        }
+        break;
+      case 'name':
+        if (!value || value.trim().length < 2) {
+          error = 'Name must be at least 2 characters';
+        }
+        break;
+      default:
+        break;
+    }
+    
+    setFieldErrors(prev => ({
+      ...prev,
+      [field]: error
+    }));
+    
+    return error === '';
+  };
+
   const handleBasicInfoChange = (field, value) => {
     setBasicInfo(prev => ({
       ...prev,
       [field]: value
     }));
+    
+    // Validate field in real-time
+    if (value) {
+      validateField(field, value);
+    } else {
+      // Clear error if field is empty
+      setFieldErrors(prev => ({
+        ...prev,
+        [field]: ''
+      }));
+    }
   };
 
   const handleResumeChange = (field, value) => {
@@ -232,19 +276,19 @@ const AdminProfile = ({ onBackToDashboard, apiBaseUrl, onLogout }) => {
           <nav className="main-navigation">
             <button 
               className={`nav-tab ${activeTab === 'employees' ? 'active' : ''}`}
-              onClick={() => onBackToDashboard()}
+              onClick={() => onNavigateToModule && onNavigateToModule('employees')}
             >
               Employees
             </button>
             <button 
               className={`nav-tab`}
-              onClick={() => setActiveTab('attendance')}
+              onClick={() => onNavigateToModule && onNavigateToModule('attendance')}
             >
               Attendance
             </button>
             <button 
               className={`nav-tab`}
-              onClick={() => setActiveTab('timeoff')}
+              onClick={() => onNavigateToModule && onNavigateToModule('timeoff')}
             >
               Time Off
             </button>
@@ -333,71 +377,95 @@ const AdminProfile = ({ onBackToDashboard, apiBaseUrl, onLogout }) => {
               </div>
               <div className="info-field">
                 <label>Job Position</label>
-                {isEditingBasicInfo ? (
-                  <input 
-                    type="text" 
-                    className="info-input editable" 
-                    value={basicInfo.jobPosition}
-                    onChange={(e) => handleBasicInfoChange('jobPosition', e.target.value)}
-                  />
-                ) : (
-                  <input type="text" className="info-input" value={basicInfo.jobPosition} readOnly />
-                )}
+                <div className="input-wrapper">
+                  {isEditingBasicInfo ? (
+                    <input 
+                      type="text" 
+                      className={`info-input editable ${fieldErrors.jobPosition ? 'error' : ''}`}
+                      value={basicInfo.jobPosition}
+                      onChange={(e) => handleBasicInfoChange('jobPosition', e.target.value)}
+                      placeholder="Enter your job position"
+                    />
+                  ) : (
+                    <input type="text" className="info-input" value={basicInfo.jobPosition} readOnly />
+                  )}
+                  {fieldErrors.jobPosition && (
+                    <span className="error-message">{fieldErrors.jobPosition}</span>
+                  )}
+                </div>
               </div>
               <div className="info-field">
                 <label>Email</label>
-                {isEditingBasicInfo ? (
-                  <input 
-                    type="email" 
-                    className="info-input editable" 
-                    value={basicInfo.email}
-                    onChange={(e) => handleBasicInfoChange('email', e.target.value)}
-                  />
-                ) : (
-                  <input type="email" className="info-input" value={basicInfo.email} readOnly />
-                )}
+                <div className="input-wrapper">
+                  {isEditingBasicInfo ? (
+                    <input 
+                      type="email" 
+                      className={`info-input editable ${fieldErrors.email ? 'error' : ''}`}
+                      value={basicInfo.email}
+                      onChange={(e) => handleBasicInfoChange('email', e.target.value)}
+                      placeholder="Enter your email address"
+                    />
+                  ) : (
+                    <input type="email" className="info-input" value={basicInfo.email} readOnly />
+                  )}
+                  {fieldErrors.email && (
+                    <span className="error-message">{fieldErrors.email}</span>
+                  )}
+                </div>
               </div>
               <div className="info-field">
                 <label>Mobile</label>
-                {isEditingBasicInfo ? (
-                  <input 
-                    type="tel" 
-                    className="info-input editable" 
-                    value={basicInfo.mobile}
-                    onChange={(e) => handleBasicInfoChange('mobile', e.target.value)}
-                  />
-                ) : (
-                  <input type="tel" className="info-input" value={basicInfo.mobile} readOnly />
-                )}
+                <div className="input-wrapper">
+                  {isEditingBasicInfo ? (
+                    <input 
+                      type="tel" 
+                      className={`info-input editable ${fieldErrors.mobile ? 'error' : ''}`}
+                      value={basicInfo.mobile}
+                      onChange={(e) => handleBasicInfoChange('mobile', e.target.value)}
+                      placeholder="+1 (555) 123-4567"
+                    />
+                  ) : (
+                    <input type="tel" className="info-input" value={basicInfo.mobile} readOnly />
+                  )}
+                  {fieldErrors.mobile && (
+                    <span className="error-message">{fieldErrors.mobile}</span>
+                  )}
+                </div>
               </div>
             </div>
             
             <div className="info-right">
               <div className="info-field">
                 <label>Company</label>
-                {isEditingBasicInfo ? (
-                  <input 
-                    type="text" 
-                    className="info-input editable" 
-                    value={basicInfo.company}
-                    onChange={(e) => handleBasicInfoChange('company', e.target.value)}
-                  />
-                ) : (
-                  <input type="text" className="info-input" value={basicInfo.company} readOnly />
-                )}
+                <div className="input-wrapper">
+                  {isEditingBasicInfo ? (
+                    <input 
+                      type="text" 
+                      className="info-input editable" 
+                      value={basicInfo.company}
+                      onChange={(e) => handleBasicInfoChange('company', e.target.value)}
+                      placeholder="Enter company name"
+                    />
+                  ) : (
+                    <input type="text" className="info-input" value={basicInfo.company} readOnly />
+                  )}
+                </div>
               </div>
               <div className="info-field">
                 <label>Department</label>
-                {isEditingBasicInfo ? (
-                  <input 
-                    type="text" 
-                    className="info-input editable" 
-                    value={basicInfo.department}
-                    onChange={(e) => handleBasicInfoChange('department', e.target.value)}
-                  />
-                ) : (
-                  <input type="text" className="info-input" value={basicInfo.department} readOnly />
-                )}
+                <div className="input-wrapper">
+                  {isEditingBasicInfo ? (
+                    <input 
+                      type="text" 
+                      className="info-input editable" 
+                      value={basicInfo.department}
+                      onChange={(e) => handleBasicInfoChange('department', e.target.value)}
+                      placeholder="Enter department"
+                    />
+                  ) : (
+                    <input type="text" className="info-input" value={basicInfo.department} readOnly />
+                  )}
+                </div>
               </div>
               <div className="info-field">
                 <label>Manager</label>
@@ -490,6 +558,7 @@ const AdminProfile = ({ onBackToDashboard, apiBaseUrl, onLogout }) => {
                       rows="3"
                       value={resumeData.summary}
                       onChange={(e) => handleResumeChange('summary', e.target.value)}
+                      placeholder="Write a brief professional summary highlighting your key skills and experience..."
                     />
                   ) : (
                     <textarea className="form-textarea" rows="3" value={resumeData.summary} readOnly />

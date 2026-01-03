@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/EmployeeDashboard.css';
 import companyLogo from '../assets/company-logo.jpeg';
 
-const EmployeeDashboard = ({ onLogout, onNavigateToProfile }) => {
-  const [activeTab, setActiveTab] = useState('employees');
+const EmployeeDashboard = ({ onLogout, onNavigateToProfile, initialModule = 'employees' }) => {
+  const [activeTab, setActiveTab] = useState(initialModule);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,6 +12,12 @@ const EmployeeDashboard = ({ onLogout, onNavigateToProfile }) => {
   const [modalActiveTab, setModalActiveTab] = useState('resume');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [attendanceView, setAttendanceView] = useState('daily');
+  const [timeoffFilter, setTimeoffFilter] = useState('all');
+
+  // Update active tab when initialModule changes (for navigation from profile)
+  useEffect(() => {
+    setActiveTab(initialModule);
+  }, [initialModule]);
 
   // Mock employee data
   const employees = [
@@ -224,7 +230,76 @@ const EmployeeDashboard = ({ onLogout, onNavigateToProfile }) => {
     }
   ];
 
-  // Mock attendance data
+  // Mock time off data
+  const timeOffAllocation = {
+    paidTimeOff: {
+      total: 24,
+      used: 5,
+      available: 19
+    },
+    sickLeave: {
+      total: 7,
+      used: 2,
+      available: 5
+    },
+    unpaidLeave: {
+      total: 'Unlimited',
+      used: 3,
+      available: 'Unlimited'
+    }
+  };
+
+  const timeOffRequests = [
+    {
+      id: 1,
+      employeeName: 'John Smith',
+      startDate: '28/10/2025',
+      endDate: '30/10/2025',
+      timeOffType: 'Paid time Off',
+      status: 'pending',
+      reason: 'Family vacation'
+    },
+    {
+      id: 2,
+      employeeName: 'Emily Davis',
+      startDate: '15/11/2025',
+      endDate: '15/11/2025',
+      timeOffType: 'Sick Leave',
+      status: 'approved',
+      reason: 'Medical appointment'
+    },
+    {
+      id: 3,
+      employeeName: 'Michael Wilson',
+      startDate: '20/11/2025',
+      endDate: '22/11/2025',
+      timeOffType: 'Unpaid Leave',
+      status: 'pending',
+      reason: 'Personal matter'
+    },
+    {
+      id: 4,
+      employeeName: 'Sarah Johnson',
+      startDate: '05/12/2025',
+      endDate: '07/12/2025',
+      timeOffType: 'Paid time Off',
+      status: 'rejected',
+      reason: 'Holiday break'
+    },
+    {
+      id: 5,
+      employeeName: 'David Lee',
+      startDate: '12/12/2025',
+      endDate: '12/12/2025',
+      timeOffType: 'Sick Leave',
+      status: 'approved',
+      reason: 'Flu symptoms'
+    }
+  ];
+
+  const handleTimeOffAction = (requestId, action) => {
+    alert(`Time off request ${action} for request ID: ${requestId}`);
+  };
   const attendanceData = [
     {
       id: 1,
@@ -512,8 +587,101 @@ const EmployeeDashboard = ({ onLogout, onNavigateToProfile }) => {
 
         {activeTab === 'timeoff' && (
           <div className="timeoff-section">
-            <h2>Time Off Module</h2>
-            <p>Time off requests and management will be displayed here.</p>
+            <div className="timeoff-controls">
+              <div className="timeoff-label">Time Off Allocation</div>
+              <button className="new-timeoff-btn">NEW</button>
+              <input 
+                type="text" 
+                className="timeoff-search" 
+                placeholder="Searchbar"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {/* Time Off Allocation Cards */}
+            <div className="allocation-cards">
+              <div className="allocation-card paid">
+                <h3>Paid time Off</h3>
+                <div className="allocation-info">
+                  <span className="days-available">{timeOffAllocation.paidTimeOff.available} Days Available</span>
+                </div>
+              </div>
+              <div className="allocation-card sick">
+                <h3>Sick time off</h3>
+                <div className="allocation-info">
+                  <span className="days-available">{timeOffAllocation.sickLeave.available} Days Available</span>
+                </div>
+              </div>
+              <div className="allocation-card unpaid">
+                <h3>Unpaid Leave</h3>
+                <div className="allocation-info">
+                  <span className="days-available">{timeOffAllocation.unpaidLeave.available}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Time Off Requests Table */}
+            <div className="timeoff-table-container">
+              <table className="timeoff-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Time off Type</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {timeOffRequests
+                    .filter(request => 
+                      request.employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      request.timeOffType.toLowerCase().includes(searchTerm.toLowerCase())
+                    )
+                    .map(request => (
+                    <tr key={request.id} className={`timeoff-row ${request.status}`}>
+                      <td>
+                        <div className="employee-cell">
+                          <span className="employee-bracket">[</span>
+                          <span className="employee-name">{request.employeeName}</span>
+                          <span className="employee-bracket">]</span>
+                        </div>
+                      </td>
+                      <td className="date-cell">{request.startDate}</td>
+                      <td className="date-cell">{request.endDate}</td>
+                      <td className="type-cell">
+                        <span className={`timeoff-type ${request.timeOffType.toLowerCase().replace(/\s+/g, '-')}`}>
+                          {request.timeOffType}
+                        </span>
+                      </td>
+                      <td className="status-cell">
+                        {request.status === 'pending' ? (
+                          <div className="action-buttons">
+                            <button 
+                              className="reject-btn"
+                              onClick={() => handleTimeOffAction(request.id, 'rejected')}
+                              title="Reject Request"
+                            >
+                            </button>
+                            <button 
+                              className="approve-btn"
+                              onClick={() => handleTimeOffAction(request.id, 'approved')}
+                              title="Approve Request"
+                            >
+                            </button>
+                          </div>
+                        ) : (
+                          <span className={`status-badge ${request.status}`}>
+                            {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
