@@ -5,7 +5,7 @@ const { authenticate } = require('../middlewares/auth.middleware');
 const { authorizeRoles } = require('../middlewares/role.middleware');
 const { validateLeaveRequest, validateLeaveAction } = require('../validators/leave.validator');
 const { validate } = require('../middlewares/validate.middleware');
-const upload = require('../config/multer');
+const { uploadAttachments } = require('../config/multer'); // FIXED: Import attachments upload
 
 // All routes require authentication
 router.use(authenticate);
@@ -17,7 +17,7 @@ router.use(authenticate);
 // @access  Private (Employee, HR, Admin)
 router.post(
   '/apply',
-  upload.array('attachments', 3),
+  uploadAttachments, // FIXED: Use the exported function
   validate(validateLeaveRequest),
   leaveController.applyLeave
 );

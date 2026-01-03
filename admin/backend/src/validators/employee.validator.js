@@ -56,9 +56,8 @@ const validateEmployeeCreate = Joi.object({
   
   password: Joi.string()
     .min(8)
-    .required()
+    .optional()
     .messages({
-      'string.empty': 'Password is required',
       'string.min': 'Password must be at least 8 characters'
     }),
   

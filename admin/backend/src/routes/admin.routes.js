@@ -3,9 +3,9 @@ const router = express.Router();
 const adminController = require('../controllers/admin.controller');
 const { authenticate } = require('../middlewares/auth.middleware');
 const { authorizeRoles } = require('../middlewares/role.middleware');
-const { validateEmployeeCreate, validateEmployeeUpdate } = require('../validators/employee.validator');
+const { validateEmployeeCreate, validateEmployeeFullUpdate } = require('../validators/employee.validator');
 const { validate } = require('../middlewares/validate.middleware');
-const upload = require('../config/multer');
+const { upload } = require('../config/multer'); // FIXED: Import base upload
 
 // All routes require authentication and Admin/HR role
 router.use(authenticate);
@@ -42,7 +42,7 @@ router.post(
 // @access  Private (HR, Admin)
 router.put(
   '/employees/:employeeId',
-  validate(validateEmployeeUpdate),
+  validate(validateEmployeeFullUpdate),
   adminController.updateEmployee
 );
 
@@ -111,7 +111,7 @@ router.get('/analytics', adminController.getAnalytics);
 // @access  Private (HR, Admin)
 router.post(
   '/bulk/attendance',
-  upload.single('file'),
+  upload.single('file'), // FIXED: Use upload.single()
   adminController.bulkUploadAttendance
 );
 
@@ -121,7 +121,7 @@ router.post(
 router.post(
   '/bulk/employees',
   authorizeRoles('Admin'),
-  upload.single('file'),
+  upload.single('file'), // FIXED: Use upload.single()
   adminController.bulkCreateEmployees
 );
 

@@ -5,7 +5,7 @@ const { authenticate } = require('../middlewares/auth.middleware');
 const { authorizeRoles } = require('../middlewares/role.middleware');
 const { validateEmployeeUpdate } = require('../validators/employee.validator');
 const { validate } = require('../middlewares/validate.middleware');
-const upload = require('../config/multer'); // For file uploads
+const { uploadProfilePicture, uploadDocument } = require('../config/multer'); // FIXED: Import specific upload functions
 
 // All routes require authentication
 router.use(authenticate);
@@ -29,7 +29,7 @@ router.put(
 // @access  Private (Employee, HR, Admin)
 router.put(
   '/profile-picture',
-  upload.single('profilePicture'),
+  uploadProfilePicture, // FIXED: Use the exported function
   employeeController.updateProfilePicture
 );
 
@@ -38,7 +38,7 @@ router.put(
 // @access  Private (Employee, HR, Admin)
 router.post(
   '/documents',
-  upload.single('document'),
+  uploadDocument, // FIXED: Use the exported function
   employeeController.uploadDocument
 );
 
