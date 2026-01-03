@@ -2,9 +2,181 @@
 
 .admin-profile-container {
   min-height: 100vh;
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  padding: 20px;
+  background: #1a1a1a;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header Styles - Matching Dashboard */
+.dashboard-header {
+  background: #2a2a2a;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #404040;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.company-logo {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  background: #404040;
+  border-radius: 8px;
+}
+
+.logo-image {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.main-navigation {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-tab {
+  background: transparent;
+  border: 1px solid #555;
+  color: #ccc;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.nav-tab:hover {
+  background: #404040;
+  color: #fff;
+}
+
+.nav-tab.active {
+  background: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Check In/Out Circular Button */
+.check-in-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.check-in-circle.checked-out {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.check-in-circle.checked-in {
+  background: linear-gradient(135deg, #dc3545, #e74c3c);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.check-in-circle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.check-in-circle:active {
+  transform: scale(0.95);
+}
+
+.user-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #404040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.profile-btn {
+  background: transparent;
+  border: 1px solid #555;
+  color: #ccc;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-btn:hover {
+  background: #404040;
+  color: #fff;
+}
+
+.profile-btn.active-profile {
+  background: #007bff;
+  border-color: #007bff;
+  color: #fff;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  min-width: 120px;
+  z-index: 1000;
+}
+
+.profile-dropdown button {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  text-align: left;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.profile-dropdown button:hover {
+  background: #404040;
+  color: #fff;
+}
+
+/* Profile Content */
+.profile-content {
+  padding: 2rem;
 }
 
 .profile-header-section {
@@ -23,7 +195,8 @@
   align-items: flex-start;
   gap: 30px;
   margin-bottom: 30px;
-  background-color: #34495e;
+  background: #2a2a2a;
+  border: 1px solid #404040;
   padding: 30px;
   border-radius: 10px;
 }

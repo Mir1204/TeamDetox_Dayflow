@@ -1,49 +1,152 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/AdminProfile.css';
+import companyLogo from '../assets/company-logo.jpeg';
 
-const AdminProfile = ({ onBackToDashboard }) => {
+const AdminProfile = ({ onBackToDashboard, apiBaseUrl, onLogout }) => {
   const [activeSection, setActiveSection] = useState('resume');
   const [profileImage, setProfileImage] = useState(null);
   const [isEditingBasicInfo, setIsEditingBasicInfo] = useState(false);
   const [isEditingResume, setIsEditingResume] = useState(false);
   const [isEditingPrivateInfo, setIsEditingPrivateInfo] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState('profile');
+  const [isCheckedIn, setIsCheckedIn] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   
-  // Basic info state with dummy data
+  // Get user from localStorage or use default
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  // Basic info state - will be loaded from user data or API
   const [basicInfo, setBasicInfo] = useState({
-    name: 'John Smith',
-    jobPosition: 'Senior Software Developer',
-    email: 'john.smith@company.com',
-    mobile: '+1 (555) 123-4567',
-    company: 'TechCorp Solutions',
-    department: 'Information Technology',
-    manager: 'Sarah Johnson',
-    location: 'New York, NY'
+    name: '',
+    jobPosition: '',
+    email: '',
+    mobile: '',
+    company: '',
+    department: '',
+    manager: '',
+    location: ''
   });
 
-  // Resume data with dummy data
+  // Resume data - will be loaded from API
   const [resumeData, setResumeData] = useState({
-    summary: 'Experienced software developer with 8+ years in full-stack development, specializing in React, Node.js, and cloud technologies.',
-    experience: 'Senior Software Developer at TechCorp Solutions (2020-Present)\nSoftware Developer at InnovateTech (2018-2020)\nJunior Developer at StartupXYZ (2016-2018)',
-    education: 'Bachelor of Science in Computer Science\nUniversity of Technology (2012-2016)\nGPA: 3.8/4.0',
-    skills: 'JavaScript, React, Node.js, Python, AWS, Docker, MongoDB, PostgreSQL, Git, Agile/Scrum'
+    summary: '',
+    experience: '',
+    education: '',
+    skills: ''
   });
 
-  // Private info data with dummy data
+  // Private info data - will be loaded from API
   const [privateInfo, setPrivateInfo] = useState({
-    dateOfBirth: '1990-05-15',
-    residingAddress: '123 Main Street, Apartment 4B, New York, NY 10001',
-    nationality: 'United States',
-    personalEmail: 'john.smith.personal@gmail.com',
-    gender: 'Male',
-    maritalStatus: 'Married',
-    dateOfJoining: '2020-03-01',
-    accountNumber: '****-****-****-1234',
-    bankName: 'Chase Bank',
-    ifscCode: 'CHASUS33',
-    panNo: 'ABCDE1234F',
-    uanNo: 'UAN123456789',
-    empCode: 'EMP001'
+    dateOfBirth: '',
+    nationality: '',
+    maritalStatus: '',
+    emergencyContact: '',
+    address: '',
+    socialSecurity: '',
+    bankAccount: ''
   });
+
+  // Salary data - will be loaded from API
+  const [salaryData, setSalaryData] = useState({
+    baseSalary: '',
+    bonuses: '',
+    allowances: '',
+    deductions: '',
+    netSalary: '',
+    payFrequency: '',
+    lastRaise: '',
+    nextReview: ''
+  });
+
+  // Load user profile data on component mount
+  useEffect(() => {
+    loadUserProfile();
+  }, []);
+
+  const loadUserProfile = async () => {
+    setIsLoading(true);
+    
+    try {
+      if (user) {
+        // Load data based on user info from localStorage
+        setBasicInfo({
+          name: user.name || '',
+          jobPosition: user.role === 'admin' ? 'Administrator' : 'Employee',
+          email: user.email || '',
+          mobile: user.phone || '',
+          company: user.companyName || '',
+          department: user.role === 'admin' ? 'Management' : 'General',
+          manager: user.role === 'admin' ? 'CEO' : 'Department Head',
+          location: 'Head Office'
+        });
+      } else {
+        // Use dummy data if no user logged in
+        loadDummyData();
+      }
+    } catch (error) {
+      console.error('Error loading profile:', error);
+      setError('Failed to load profile data');
+      loadDummyData();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadDummyData = () => {
+    setBasicInfo({
+      name: 'John Smith',
+      jobPosition: 'Senior Software Developer',
+      email: 'john.smith@company.com',
+      mobile: '+1 (555) 123-4567',
+      company: 'TechCorp Solutions',
+      department: 'Information Technology',
+      manager: 'Sarah Johnson',
+      location: 'New York, NY'
+    });
+
+    setResumeData({
+      summary: 'Experienced software developer with 8+ years in full-stack development, specializing in React, Node.js, and cloud technologies.',
+      experience: 'Senior Software Developer at TechCorp Solutions (2020-Present)\nSoftware Developer at InnovateTech (2018-2020)\nJunior Developer at StartupXYZ (2016-2018)',
+      education: 'Bachelor of Science in Computer Science\nUniversity of Technology (2012-2016)\nGPA: 3.8/4.0',
+      skills: 'JavaScript, React, Node.js, Python, AWS, Docker, MongoDB, PostgreSQL, Git, Agile/Scrum'
+    });
+
+    setPrivateInfo({
+      dateOfBirth: '1990-05-15',
+      nationality: 'United States',
+      maritalStatus: 'Married',
+      emergencyContact: '+1 (555) 987-6543 (Jane Smith)',
+      address: '123 Main Street, Apartment 4B, New York, NY 10001',
+      socialSecurity: '***-**-1234',
+      bankAccount: '****-****-****-1234 (Chase Bank)'
+    });
+
+    setSalaryData({
+      baseSalary: '$95,000',
+      bonuses: '$8,000',
+      allowances: '$2,400',
+      deductions: '$1,800',
+      netSalary: '$103,600',
+      payFrequency: 'Monthly',
+      lastRaise: 'January 2023',
+      nextReview: 'January 2024'
+    });
+  };
+
+  const handleCheckToggle = () => {
+    if (isCheckedIn) {
+      setIsCheckedIn(false);
+      alert('Checked Out successfully!');
+    } else {
+      setIsCheckedIn(true);
+      alert('Checked In successfully!');
+    }
+  };
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -104,31 +207,80 @@ const AdminProfile = ({ onBackToDashboard }) => {
     alert('Private information saved successfully!');
   };
 
-  // Mock salary data
-  const salaryData = {
-    basicSalary: 50000,
-    hra: 15000,
-    conveyance: 3000,
-    medicalAllowance: 2000,
-    specialAllowance: 5000,
-    providentFund: 6000,
-    professionalTax: 2400,
-    incomeTax: 8500
-  };
-
   const calculateTotals = () => {
-    const grossSalary = salaryData.basicSalary + salaryData.hra + salaryData.conveyance + 
-                       salaryData.medicalAllowance + salaryData.specialAllowance;
-    const totalDeductions = salaryData.providentFund + salaryData.professionalTax + salaryData.incomeTax;
-    const netSalary = grossSalary - totalDeductions;
+    const basicSalary = parseFloat(salaryData.baseSalary?.replace(/[$,]/g, '') || '0');
+    const bonuses = parseFloat(salaryData.bonuses?.replace(/[$,]/g, '') || '0');
+    const allowances = parseFloat(salaryData.allowances?.replace(/[$,]/g, '') || '0');
+    const deductions = parseFloat(salaryData.deductions?.replace(/[$,]/g, '') || '0');
     
-    return { grossSalary, totalDeductions, netSalary };
+    const grossSalary = basicSalary + bonuses + allowances;
+    const netSalary = grossSalary - deductions;
+    
+    return { grossSalary, netSalary, totalDeductions: deductions };
   };
 
   const { grossSalary, totalDeductions, netSalary } = calculateTotals();
 
   return (
     <div className="admin-profile-container">
+      {/* Header */}
+      <div className="dashboard-header">
+        <div className="header-left">
+          <div className="company-logo">
+            <img src={companyLogo} alt="Company Logo" className="logo-image" />
+          </div>
+          <nav className="main-navigation">
+            <button 
+              className={`nav-tab ${activeTab === 'employees' ? 'active' : ''}`}
+              onClick={() => onBackToDashboard()}
+            >
+              Employees
+            </button>
+            <button 
+              className={`nav-tab`}
+              onClick={() => setActiveTab('attendance')}
+            >
+              Attendance
+            </button>
+            <button 
+              className={`nav-tab`}
+              onClick={() => setActiveTab('timeoff')}
+            >
+              Time Off
+            </button>
+          </nav>
+        </div>
+        
+        <div className="header-right">
+          {/* Check In/Out Button */}
+          <button 
+            className={`check-in-circle ${isCheckedIn ? 'checked-in' : 'checked-out'}`}
+            onClick={handleCheckToggle}
+            title={isCheckedIn ? 'Click to Check Out' : 'Click to Check In'}
+          >
+          </button>
+
+          <div className="user-status">
+            <div className="user-avatar">👤</div>
+          </div>
+          
+          <div className="user-menu">
+            <button 
+              className="profile-btn active-profile"
+              onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+            >
+              My Profile
+            </button>
+            {showProfileDropdown && (
+              <div className="profile-dropdown">
+                <button onClick={() => onBackToDashboard()}>Back to Dashboard</button>
+                <button onClick={onLogout}>Log Out</button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       <div className="profile-content">
         {/* Profile Header */}
         <div className="profile-header-section">
